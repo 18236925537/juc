@@ -1,12 +1,45 @@
 package com.zpb.juc.countdownlatch;
 
-/**
- * @author zhoupengbing
- * @packageName com.zpb.juc.countdownlatch
- * @email zhoupengbing@telecomyt.com.cn
- * @description
- * @createTime 2020年07月11日 11:36:00
- * @Version v1.0
- */
+import java.util.concurrent.CountDownLatch;
+
 public class CountDownLatchDemo1 {
+
+   private static void usingCountLatch(){
+       Thread [] threads = new Thread[100];
+       CountDownLatch latch = new CountDownLatch(threads.length);
+       //模拟多个线程
+       for (int i = 0; i < threads.length; i++) {
+           threads[i] = new Thread(() -> {
+               int result = 0;
+               for (int j = 0; j < 10000; j++) {
+                  result += j;
+                  latch.countDown();
+               }
+           });
+       }
+       
+       //启动线程
+       for (int i = 0; i < threads.length; i++) {
+           threads[i].start();
+       }
+
+       //
+       try {
+           latch.await();
+       } catch(Exception e) {
+           e.printStackTrace();
+       }
+
+       System.out.println("latch end");
+   }
+
+   private static void usingJoin(){
+       
+   }
+
+    public static void main(String[] args) {
+        usingCountLatch();
+    }
+
+
 }
